@@ -55,7 +55,7 @@
     
         <div class="form-item">
           <label for="lastname" >Lastname<sup><small>*</small></sup></label>
-          <input value={form?.lastname?? ''} id="lalastnametName" type="text" name="lastname" required />
+          <input value={form?.lastname?? ''} id="lastname" type="text" name="lastname" required />
       </div>
     
       <div class="form-item">

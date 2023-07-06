@@ -1,12 +1,12 @@
 import { redirect } from '@sveltejs/kit';
 
 export function load({locals}){
-    console.log('base token',locals.pb.authStore.token);
-    console.log('valid',locals.pb.authStore.isValid);
-    if(!locals.pb.authStore.token) throw redirect(303,'/login');
+    console.log('base token',locals.userPb.authStore.token);
+    console.log('valid',locals.userPb.authStore.isValid);
+    if(!locals.userPb.authStore.token) throw redirect(303,'/login');
 
     const user = {
-        firstname: locals.pb.authStore.baseModel.firstname
+        firstname: locals.userPb.authStore.baseModel.firstname
     }
 
 

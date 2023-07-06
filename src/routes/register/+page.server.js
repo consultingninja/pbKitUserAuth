@@ -40,7 +40,7 @@ export const actions={
             data.password = hashedPassword;
             data.passwordConfirm = hashedPassword;
             //create the user
-            const result = await locals.pb.collection('users').create(data);
+            const result = await locals.userPb.collection('users').create(data);
             console.log('result',result);
             if(result) createResult = true;
         }

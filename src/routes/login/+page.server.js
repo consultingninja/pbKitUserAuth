@@ -25,7 +25,7 @@ export const actions = {
         }
 
         try{
-            await locals.pb.collection('users').authWithPassword(
+            await locals.userPb.collection('users').authWithPassword(
                 email,
                 hashedPassword
             );

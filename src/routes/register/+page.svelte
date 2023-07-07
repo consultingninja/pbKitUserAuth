@@ -1,5 +1,4 @@
 <script>
-    import { afterUpdate, onDestroy } from 'svelte';
     export let form;
     
     let showPassword = false;
@@ -10,30 +9,8 @@
 
     let email;
 
-    let touched = false;
-    let timeoutId;
-
-    $:{if(email && form?.emailUsed) email.focus()}
+    $:{if(email && form?.error) email.focus()}
     $:passError = (password?.length && confirm?.length)? (password !== confirm)? true: false : false;
-
-    function clearFieldError() {
-        form.emailUsed = false; // Reset the emailUsed property
-    }
-
-    function startTyping() {
-        clearTimeout(timeoutId); // Clear any existing timeout
-        touched = true;
-        timeoutId = setTimeout(clearFieldError, 2000); // Set a new timeout to clear the error after 2 seconds
-    }
-
-    afterUpdate(() => {
-        email?.addEventListener('input', startTyping); // Add event listener for input changes
-    });
-
-    onDestroy(() => {
-        clearTimeout(timeoutId); // Clean up the timeout on component destruction
-        email?.removeEventListener('input', startTyping); // Remove the event listener
-    });
 
 
 </script>
@@ -60,7 +37,7 @@
     
       <div class="form-item">
           <label for="email" >Email<sup><small>*</small></sup></label>
-          <input bind:this={email} class:fieldError={form?.emailUsed} value={form?.email?? ''} id="email" type="email" name="email" required />
+          <input bind:this={email} on:keydown={()=> {form.error = false; form.message = '';}}  class:fieldError={form?.error} value={form?.email?? ''} id="email" type="email" name="email" required />
       </div>
     
         <div class="form-item">
@@ -108,8 +85,8 @@
         </div>
     
         <div class="form-item">
-            <label for="username">Username<small class="nospace">(no spaces)</small></label>
-            <input value={form?.username?? ''} type="text" id="username" name="username" />
+            <label for="username">Username<small class="nospace">(no spaces, min length 3)</small></label>
+            <input minlength="3"  value={form?.username?? ''} type="text" id="username" name="username" />
         </div>
     
         <div class="form-item">

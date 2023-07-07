@@ -1,5 +1,3 @@
-import crypto from 'crypto';
-import {SECRET_SIGNATURE} from '$env/static/private';
 import { redirect } from '@sveltejs/kit';
 
 export const actions={
@@ -26,34 +24,33 @@ export const actions={
             passwordConfirm: '',
             username: userNospace
         };
+
+        let registerResponse = {
+            error:false,
+            email:email,
+            firstname,
+            lastname,
+            username: userNospace,
+            message: ''
+        }
     
         try{
-            //hash the pass so we aren't sending or storing plain text
-            const hash = crypto.createHash('sha256');
-            //add the password
-            hash.update(password);
-            //add the env secret
-            hash.update(SECRET_SIGNATURE);
-            // Obtain the hashed password
-            const hashedPassword = hash.digest('hex');
-            //set hashed password to data object
-            data.password = hashedPassword;
-            data.passwordConfirm = hashedPassword;
+            data.password = password;
+            data.passwordConfirm = password;
             //create the user
             const result = await locals.userPb.collection('users').create(data);
-            console.log('result',result);
+            //console.log('result',result);
             if(result) createResult = true;
+        }catch(err){
+            console.log('error',err);
+            registerResponse.error = true;
+            registerResponse.message = message;
+
         }
 
             finally{
                 if(!createResult){
-                    return{
-                        emailUsed:true,
-                        email:email,
-                        firstname,
-                        lastname,
-                        username: userNospace
-                    }
+                    return registerResponse;
                 }
                 if(createResult) throw redirect(303,'/login')
 
